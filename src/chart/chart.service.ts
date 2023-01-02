@@ -18,11 +18,6 @@ export type ChartDatasetMobile = {
     color: string,
     legendFontColor: string,
 }
-export type ChartDatasetMobileLine = {
-    data: number[]
-    strokeWidth: 2,
-    key: string
-}
 
 @Injectable()
 export class ChartService {
