@@ -17,11 +17,12 @@ export class ChartController {
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
         const currentYear = Number(queryParams.year ? queryParams.year : new Date().getFullYear())
-        const currentMonth = Number(queryParams.month ? queryParams.month : new Date().getMonth())
+        const currentMonth = Number(queryParams.month ? queryParams.month : null)
+
         const paramsForSearchSpending = {
             createdAt: {
-                $gte: new Date(currentYear, String(currentMonth) ? !!+queryParams.month || +queryParams.month === 0 ? currentMonth : 0 : 0, 0),
-                $lt: new Date(currentYear, String(currentMonth) ? !!+queryParams.month || +queryParams.month === 0 ? currentMonth : 11 : 11, 30)
+                $gte: new Date(currentYear, currentMonth ? currentMonth : 0, 1),
+                $lt: new Date(currentYear, currentMonth ? currentMonth : 11, 31)
             },
             userId,
             walletId: queryParams.walletId
@@ -37,7 +38,7 @@ export class ChartController {
                     chartData: await this.chartService.getChartDatasetForMobilePie(allHistory),
                     date: {
                         year: paramsForSearchSpending.createdAt.$lt,
-                        month: !!+queryParams.month || +queryParams.month === 0 ? currentMonth : ''
+                        month: queryParams.month
                     }
                 }
             }
