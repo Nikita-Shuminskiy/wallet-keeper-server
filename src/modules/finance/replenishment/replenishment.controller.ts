@@ -20,7 +20,7 @@ export class ReplenishmentController {
     }
 
     @Get()
-    getReplenishments(@Query() {walletId}: GetReplenishmentDto): Promise<ReplenishmentModel[] | null> {
+    getReplenishments(@Query() {walletId}: {walletId: string}): Promise<ReplenishmentModel[] | null> {
         const result = this.replenishmentService.getReplenishmentsByWalletId(walletId)
         if (!result) {
             throw new HttpException('replenishment is empty', HttpStatus.BAD_REQUEST);
