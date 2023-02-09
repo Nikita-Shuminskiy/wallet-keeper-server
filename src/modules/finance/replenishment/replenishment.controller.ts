@@ -43,7 +43,7 @@ export class ReplenishmentController {
         const currentReplenishment = await this.replenishmentService.addReplenishment({
             userId,
             walletId,
-            replenishment: {...replenishment, currency: walletCurrency, walletName: walletName}
+            replenishment: {...replenishment, currency: walletCurrency, walletName: walletName, title: 'income'}
         })
         if (!currentReplenishment) {
             throw new HttpException('replenishment not Create', HttpStatus.BAD_REQUEST);

@@ -58,7 +58,7 @@ export class SpendingController {
         const spending = await this.spendingService.addSpending({
             userId,
             walletId,
-            spending: {...spendingDto, currency: walletCurrency, walletName: walletName}
+            spending: {...spendingDto, currency: walletCurrency, walletName: walletName, title: 'spend'}
         })
         if (!spending) {
             throw new HttpException('spending not Create', HttpStatus.BAD_REQUEST);
