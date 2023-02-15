@@ -3,6 +3,7 @@ import {InjectModel} from "@nestjs/mongoose";
 import {Model} from "mongoose";
 import {ReplenishmentModel} from "../../../models/replenishment.model";
 import {CreateReplenishmentDto, DeleteReplenishmentDto, GetReplenishmentDto} from "./dto/replenishment.dto";
+import {SpendingModel} from "../../../models/spending.model";
 
 
 @Injectable()
@@ -18,6 +19,11 @@ export class ReplenishmentService {
     }
     async getReplenishmentsByWalletId(walletId: string) : Promise<ReplenishmentModel[]> {
         return this.replenishmentModel.find({walletId})
+    }
+    async getReplenishmentsByParameters(params): Promise<ReplenishmentModel[] | null> {
+        return this.replenishmentModel.find({
+            ...params
+        })
     }
 
     async updateReplenishment({replenishment, userId, walletId}: CreateReplenishmentDto): Promise<ReplenishmentModel | null> {
