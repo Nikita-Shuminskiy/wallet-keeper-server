@@ -5,6 +5,11 @@ import {SpendingModel} from "../../../models/spending.model";
 import {User} from "../../../common/decarators/user.decarator";
 import {UserId, WalletId} from "../../../common/dto/common.dto";
 import {AuthGuard} from "../../../common/guards/auth.guard";
+import * as moments from "moment/moment";
+import {checkIsInvalidDate} from "../../../common/utils/utils";
+import {ReplenishmentService} from "../replenishment/replenishment.service";
+import {getChartDataDto} from "../chart/dto/chart.dto";
+import {getHistoryByParamsDto} from "./dto/history.dto";
 
 
 
@@ -15,6 +20,7 @@ export class HistoryController {
 
     constructor(
         private walletService: WalletService,
+        private replenishmentService: ReplenishmentService,
         private spendingService: SpendingService,
     ) {
     }
@@ -40,12 +46,38 @@ export class HistoryController {
         return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1 ).slice(0, 5)
     }
     @Get('allUserHistory')
-    async getHistoryWalletByUserId(@User('_id') {userId} : UserId): Promise<SpendingModel[] | null> {
-        const history = await this.spendingService.getSpendingByParameters({userId : userId});
+    async getHistoryWalletByUserId(@User('_id') userId: string,  @Query() queryParams: getHistoryByParamsDto) {
+        const covertToDateEnd = moments.unix(queryParams.dateEnd).toDate()
+        const covertToDateStart = moments.unix(queryParams.dateStart).toDate()
+        const dateStart = queryParams.dateStart ? covertToDateStart : new Date(covertToDateEnd.getFullYear(), 0, 0)
+        const dateEnd = queryParams.dateEnd ? covertToDateEnd : new Date(covertToDateStart.getFullYear(), 11, 31)
+        dateStart.setHours(0, 0, 0, 0)
+        dateEnd.setHours(25, 59, 0, 0)
+        const paramsForSearchOperation = {
+            date: {
+                $gte: dateStart,
+                $lt: dateEnd
+            },
+            userId,
+            walletId: queryParams.walletId
+        }
+        if(checkIsInvalidDate(paramsForSearchOperation.date?.$gte) && checkIsInvalidDate(paramsForSearchOperation.date?.$lt)) {
+            delete paramsForSearchOperation.date
+        }
+        const history = queryParams?.showHistory === 'income'
+            ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperation)
+            : await this.spendingService.getSpendingByParameters(paramsForSearchOperation);
         if (!history) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
-        return history
+        return {
+            historyData: history,
+            date: {
+                dateStart: !checkIsInvalidDate(paramsForSearchOperation.date?.$gte) ? dateStart : null,
+                dateEnd: !checkIsInvalidDate(paramsForSearchOperation.date?.$lt) ? dateEnd : null
+            },
+            showChart: queryParams?.showHistory
+        }
     }
 
 
