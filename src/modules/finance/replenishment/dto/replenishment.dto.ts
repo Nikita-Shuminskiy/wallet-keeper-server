@@ -52,7 +52,16 @@ export class AddReplenishmentDto {
     walletId : string;
 
     @IsNotEmpty()
-    replenishment: Replenishment;
+    replenishment: {
+        _id?: string;
+        title: string;
+        description: string;
+        category: string;
+        amount: number;
+        walletName: string;
+        currency: string;
+        date: number
+    };
 }
 
 

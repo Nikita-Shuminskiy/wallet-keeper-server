@@ -67,5 +67,14 @@ export class AddSpendingDto {
     @Transform(toMongoObjectId)
     walletId : string;
 
-    spending : Spending;
+    spending : {
+        _id : string;
+        title: string;
+        description: string;
+        category: string;
+        amount: number;
+        walletName: string;
+        currency: string;
+        date: number
+    };
 }

@@ -17,8 +17,11 @@ const transformToChartDataHandlerForChartPie = (spendingArray: SpendingModel[]) 
         return accState;
     }, {})
 }
-
+const checkIsInvalidDate = (date: Date): boolean => {
+    return isNaN(Date.parse(date?.toDateString()))
+}
 
 export {
     transformToChartDataHandlerForChartPie,
+    checkIsInvalidDate
 }

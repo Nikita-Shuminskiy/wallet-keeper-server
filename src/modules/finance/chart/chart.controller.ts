@@ -4,8 +4,9 @@ import {ChartService} from "./chart.service";
 import {getChartDataDto} from "./dto/chart.dto";
 import {AuthGuard} from "../../../common/guards/auth.guard";
 import {User} from "../../../common/decarators/user.decarator";
-import * as moment from 'moment';
 import {ReplenishmentService} from "../replenishment/replenishment.service";
+import {checkIsInvalidDate} from "../../../common/utils/utils";
+import moment, * as moments from 'moment';
 
 
 @Controller('chart')
@@ -20,16 +21,24 @@ export class ChartController {
 
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
+        const covertToDateEnd = moments.unix(queryParams.dateEnd).toDate()
+        const covertToDateStart = moments.unix(queryParams.dateStart).toDate()
+        const dateStart = queryParams.dateStart ? covertToDateStart : new Date(covertToDateEnd.getFullYear(), 0, 0)
+        const dateEnd = queryParams.dateEnd ? covertToDateEnd : new Date(covertToDateStart.getFullYear(), 11, 31)
+        dateStart.setHours(0, 0, 0, 0)
+        dateEnd.setHours(25, 59, 0, 0)
+
         const paramsForSearchSpending = {
-            createdAt: {
-                $gte: new Date(Date.parse(queryParams.dateStart)),
-                $lt: new Date(Date.parse(queryParams.dateEnd))
+            date: {
+                $gte: dateStart,
+                $lt: dateEnd
             },
             userId,
             walletId: queryParams.walletId
         }
-
-
+        if(checkIsInvalidDate(paramsForSearchSpending.date?.$gte) && checkIsInvalidDate(paramsForSearchSpending.date?.$lt)) {
+            delete paramsForSearchSpending.date
+        }
         const allHistory = queryParams?.showChart === 'income'
             ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchSpending)
             : await this.spendingService.getSpendingByParameters(paramsForSearchSpending);
@@ -41,8 +50,8 @@ export class ChartController {
                 return {
                     chartData: await this.chartService.getChartDatasetForMobilePie(allHistory),
                     date: {
-                        dateStart: queryParams.dateStart,
-                        dateEnd: queryParams.dateEnd
+                        dateStart: !checkIsInvalidDate(paramsForSearchSpending.date?.$gte) ? dateStart : null,
+                        dateEnd: !checkIsInvalidDate(paramsForSearchSpending.date?.$lt) ? dateEnd : null
                     },
                     showChart: queryParams?.showChart
                 }
