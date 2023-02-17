@@ -3,15 +3,12 @@ import {WalletService} from "../wallet/wallet.service";
 import {SpendingService} from "../spending/spending.service";
 import {SpendingModel} from "../../../models/spending.model";
 import {User} from "../../../common/decarators/user.decarator";
-import {UserId, WalletId} from "../../../common/dto/common.dto";
+import {WalletId} from "../../../common/dto/common.dto";
 import {AuthGuard} from "../../../common/guards/auth.guard";
 import * as moments from "moment/moment";
-import {checkIsInvalidDate} from "../../../common/utils/utils";
+import {checkIsInvalidDate, sortWalletHistory} from "../../../common/utils/utils";
 import {ReplenishmentService} from "../replenishment/replenishment.service";
-import {getChartDataDto} from "../chart/dto/chart.dto";
 import {getHistoryByParamsDto} from "./dto/history.dto";
-
-
 
 
 @Controller('history')
@@ -34,6 +31,7 @@ export class HistoryController {
         }
         return history
     }
+
     @Get("last-five-spending")
     async getLastFiveSpendingHistory(@Query() {
         walletId
@@ -43,8 +41,9 @@ export class HistoryController {
         if (!spending) {
             throw new HttpException('Трат не найдено', HttpStatus.BAD_REQUEST);
         }
-        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1 ).slice(0, 5)
+        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1).slice(0, 5)
     }
+
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') userId: string,  @Query() queryParams: getHistoryByParamsDto) {
         const covertToDateEnd = moments.unix(queryParams.dateEnd).toDate()
@@ -64,11 +63,18 @@ export class HistoryController {
         if(checkIsInvalidDate(paramsForSearchOperation.date?.$gte) && checkIsInvalidDate(paramsForSearchOperation.date?.$lt)) {
             delete paramsForSearchOperation.date
         }
-        const history = queryParams?.showHistory === 'income'
+
+        let history = queryParams?.showHistory === 'income'
             ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperation)
             : await this.spendingService.getSpendingByParameters(paramsForSearchOperation);
         if (!history) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
+        }
+        if(queryParams.selectedCategory) {
+            history = history.filter((operation) => operation.category === queryParams.selectedCategory)
+        }
+        if(queryParams.sortBy) {
+            history = sortWalletHistory(history, queryParams.sortBy, queryParams.sortDecreasing)
         }
         return {
             historyData: history,
@@ -81,7 +87,6 @@ export class HistoryController {
     }
 
 
-
     @Delete()
     async deleteHistoryWalletByWalletId(@Body() {walletId}: WalletId): Promise<{ deletedCount: number; } | null> {
         const deleteCount = await this.spendingService.deleteSpendingByParams({walletId});
@@ -92,7 +97,7 @@ export class HistoryController {
     }
 
     @Delete('allUserHistory')
-    async deleteHistoryWalletByUserId(@User('_id') userId : string): Promise<{ deletedCount: number; } | null> {
+    async deleteHistoryWalletByUserId(@User('_id') userId: string): Promise<{ deletedCount: number; } | null> {
         const deleteCount = await this.spendingService.deleteSpendingByParams({userId});
         if (!deleteCount) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);

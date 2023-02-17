@@ -13,7 +13,7 @@ export class getHistoryByParamsDto {
     dateEnd?: number;
     selectedCategory: string
     showHistory: 'income' | 'spend';
-    sortBy: 'date' | 'sum' | 'name'
+    sortBy: 'date' | 'sum' | 'categoryName'
     sortDecreasing: 'decreasing' | 'increasing'
     @Transform(toMongoObjectId)
     walletId: string;
