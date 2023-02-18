@@ -45,14 +45,13 @@ export class HistoryController {
     }
 
     @Get('allUserHistory')
-    async getHistoryWalletByUserId(@User('_id') userId: string,  @Query() queryParams: getHistoryByParamsDto) {
-        const covertToDateEnd = moments.unix(queryParams.dateEnd).toDate()
-        const covertToDateStart = moments.unix(queryParams.dateStart).toDate()
-        const dateStart = queryParams.dateStart ? covertToDateStart : new Date(covertToDateEnd.getFullYear(), 0, 0)
-        const dateEnd = queryParams.dateEnd ? covertToDateEnd : new Date(covertToDateStart.getFullYear(), 11, 31)
-        dateStart.setHours(0, 0, 0, 0)
-        dateEnd.setHours(25, 59, 0, 0)
-        const paramsForSearchOperation = {
+    async getHistoryWalletByUserId(@User('_id') userId: string, @Query() queryParams: getHistoryByParamsDto) {
+        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).toDate() : null
+        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).toDate() : null
+        dateStart?.setHours(0, 0, 0, 0)
+        dateEnd?.setHours(25, 59, 0, 0)
+
+        const paramsForSearchOperations = {
             date: {
                 $gte: dateStart,
                 $lt: dateEnd
@@ -60,29 +59,37 @@ export class HistoryController {
             userId,
             walletId: queryParams.walletId
         }
-        if(checkIsInvalidDate(paramsForSearchOperation.date?.$gte) && checkIsInvalidDate(paramsForSearchOperation.date?.$lt)) {
-            delete paramsForSearchOperation.date
+        if (!paramsForSearchOperations.date?.$gte) {
+            delete paramsForSearchOperations.date.$gte
+        }
+        if (!paramsForSearchOperations.date?.$lt) {
+            delete paramsForSearchOperations.date.$lt
+        }
+        if ((!paramsForSearchOperations.date?.$gte && !paramsForSearchOperations.date?.$lt)) {
+            delete paramsForSearchOperations.date
         }
 
+        const currentWallet = await this.walletService.getWallet(queryParams.walletId, userId)
         let history = queryParams?.showHistory === 'income'
-            ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperation)
-            : await this.spendingService.getSpendingByParameters(paramsForSearchOperation);
+            ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperations)
+            : await this.spendingService.getSpendingByParameters(paramsForSearchOperations);
         if (!history) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
-        if(queryParams.selectedCategory) {
+        if (queryParams.selectedCategory) {
             history = history.filter((operation) => operation.category === queryParams.selectedCategory)
         }
-        if(queryParams.sortBy) {
+        if (queryParams.sortBy) {
             history = sortWalletHistory(history, queryParams.sortBy, queryParams.sortDecreasing)
         }
         return {
             historyData: history,
             date: {
-                dateStart: !checkIsInvalidDate(paramsForSearchOperation.date?.$gte) ? dateStart : null,
-                dateEnd: !checkIsInvalidDate(paramsForSearchOperation.date?.$lt) ? dateEnd : null
+                dateStart: dateStart ? dateStart : null,
+                dateEnd: dateEnd ? dateEnd : null
             },
-            showChart: queryParams?.showHistory
+            showChart: queryParams?.showHistory,
+            walletName: currentWallet.name
         }
     }
 

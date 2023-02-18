@@ -19,25 +19,28 @@ const transformToChartDataHandlerForChartPie = (spendingArray: SpendingModel[]) 
     }, {})
 }
 export const sortWalletHistory = (operations: ReplenishmentModel[], sortField: string, isUpDirection: 'increasing' | 'decreasing'): ReplenishmentModel[] => {
+    const isIncreasing = isUpDirection === 'increasing'
     return operations.sort((a, b) => {
-        const isIncreasing = isUpDirection === 'decreasing'
+        let ret: number
         if (sortField === 'categoryName') {
-            if (a.category?.toLowerCase() > b.category?.toLowerCase()) {
-                return isIncreasing ? -1 : 1;
+            if (a.category > b.category) {
+                ret = -1
+            } else if(a.category < b.category) {
+                ret = 1
             }
-            return isIncreasing  ? 1 : -1;
+            return isIncreasing ? ret : -ret   // !isIncreasing === убывание
         }
         if (sortField === 'sum') {
-            if (+a.amount > +b.amount) {
+            if (a.amount > b.amount) {
                 return isIncreasing  ? -1 : 1;
             }
             return isIncreasing  ? 1 : -1;
         }
         if (sortField === 'date') {
-            if (a.date > a.date) {
-                return isIncreasing  ? -1 : 1;
+            if (a.date > b.date) {
+                return isIncreasing ?  1 : -1
             }
-            return isIncreasing  ? 1 : -1;
+            return isIncreasing ? -1 : 1
         }
         return 0;
     });

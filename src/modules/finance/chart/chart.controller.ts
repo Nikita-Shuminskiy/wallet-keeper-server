@@ -7,6 +7,7 @@ import {User} from "../../../common/decarators/user.decarator";
 import {ReplenishmentService} from "../replenishment/replenishment.service";
 import {checkIsInvalidDate} from "../../../common/utils/utils";
 import moment, * as moments from 'moment';
+import {WalletService} from "../wallet/wallet.service";
 
 
 @Controller('chart')
@@ -14,6 +15,7 @@ import moment, * as moments from 'moment';
 export class ChartController {
     constructor(
         private spendingService: SpendingService,
+        private walletService: WalletService,
         private replenishmentService: ReplenishmentService,
         private chartService: ChartService,
     ) {
@@ -21,14 +23,12 @@ export class ChartController {
 
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
-        const covertToDateEnd = moments.unix(queryParams.dateEnd).toDate()
-        const covertToDateStart = moments.unix(queryParams.dateStart).toDate()
-        const dateStart = queryParams.dateStart ? covertToDateStart : new Date(covertToDateEnd.getFullYear(), 0, 0)
-        const dateEnd = queryParams.dateEnd ? covertToDateEnd : new Date(covertToDateStart.getFullYear(), 11, 31)
-        dateStart.setHours(0, 0, 0, 0)
-        dateEnd.setHours(25, 59, 0, 0)
+        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).toDate() : null
+        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).toDate() : null
+        dateStart?.setHours(0, 0, 0, 0)
+        dateEnd?.setHours(25, 59, 0, 0)
 
-        const paramsForSearchSpending = {
+        const paramsForSearchOperations = {
             date: {
                 $gte: dateStart,
                 $lt: dateEnd
@@ -36,24 +36,34 @@ export class ChartController {
             userId,
             walletId: queryParams.walletId
         }
-        if(checkIsInvalidDate(paramsForSearchSpending.date?.$gte) && checkIsInvalidDate(paramsForSearchSpending.date?.$lt)) {
-            delete paramsForSearchSpending.date
+        if (!paramsForSearchOperations.date?.$gte) {
+            delete paramsForSearchOperations.date.$gte
         }
+        if (!paramsForSearchOperations.date?.$lt) {
+            delete paramsForSearchOperations.date.$lt
+        }
+        if ((!paramsForSearchOperations.date?.$gte && !paramsForSearchOperations.date?.$lt)) {
+            delete paramsForSearchOperations.date
+        }
+        const currentWallet = await this.walletService.getWallet(queryParams.walletId, userId)
         const allHistory = queryParams?.showChart === 'income'
-            ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchSpending)
-            : await this.spendingService.getSpendingByParameters(paramsForSearchSpending);
+            ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperations)
+            : await this.spendingService.getSpendingByParameters(paramsForSearchOperations);
         if (!allHistory) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
+        const totalSumOperations = allHistory.reduce((acc, curr) => Math.round(acc + curr?.amount), 0)
         if (queryParams.isMobile) {
             if (queryParams.typeChart === 'pie') {
                 return {
                     chartData: await this.chartService.getChartDatasetForMobilePie(allHistory),
                     date: {
-                        dateStart: !checkIsInvalidDate(paramsForSearchSpending.date?.$gte) ? dateStart : null,
-                        dateEnd: !checkIsInvalidDate(paramsForSearchSpending.date?.$lt) ? dateEnd : null
+                        dateStart: dateStart ? dateStart : null,
+                        dateEnd: dateEnd ? dateEnd : null
                     },
-                    showChart: queryParams?.showChart
+                    showChart: queryParams?.showChart,
+                    currentWallet: currentWallet,
+                    totalSumOperations: totalSumOperations
                 }
             }
         } else {
