@@ -6,7 +6,7 @@ import {User} from "../../../common/decarators/user.decarator";
 import {WalletId} from "../../../common/dto/common.dto";
 import {AuthGuard} from "../../../common/guards/auth.guard";
 import * as moments from "moment/moment";
-import {checkIsInvalidDate, sortWalletHistory} from "../../../common/utils/utils";
+import {sortWalletHistory} from "../../../common/utils/utils";
 import {ReplenishmentService} from "../replenishment/replenishment.service";
 import {getHistoryByParamsDto} from "./dto/history.dto";
 

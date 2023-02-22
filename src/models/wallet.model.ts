@@ -1,9 +1,12 @@
 // import {SpendingModel} from '../spending/spending.model';
 import {Document, Types} from 'mongoose';
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import {Transform} from "class-transformer";
+import {toMongoObjectId} from "../dtoHandlers/userIdHandler";
 
 
 export class ICategory {
+  @Transform(toMongoObjectId)
   _id: string;
   @Prop({
     lowercase: true,
@@ -13,6 +16,7 @@ export class ICategory {
   color: string
 }
 
+/*
 export class ICurrency {
   _id: string;
   @Prop({
@@ -21,10 +25,12 @@ export class ICurrency {
   })
   value: string;
 }
+*/
 
 
 @Schema({ timestamps: true, validateBeforeSave: true })
 export class WalletModel extends Document{
+  @Transform(toMongoObjectId)
   _id: string;
 
   @Prop()

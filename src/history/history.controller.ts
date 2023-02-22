@@ -54,7 +54,7 @@ export class HistoryController {
     }
 
 
-    @Put('spending')
+/*    @Put('spending')
     async updateSpending(@Body() {spending, walletId} : UpdateSpendingDto,@User('_id') userId : string): Promise<SpendingModel | null>  {
         const dto = {spending, walletId, userId}
         const currentSpending = await this.spendingService.getSpending({
@@ -86,9 +86,9 @@ export class HistoryController {
             }
         }
         return updateSpending
-    }
+    }*/
 
-    @Post('spending')
+/*    @Post('spending')
     async addSpending(@Body() {spending : spendingDto, walletId} : AddSpendingDto, @User('_id') userId : string) : Promise<SpendingModel | null> {
         const currentWallet = await this.walletService.getWallet(walletId, userId)
         if (!currentWallet) {
@@ -112,7 +112,7 @@ export class HistoryController {
             throw new HttpException('balance not update', HttpStatus.BAD_REQUEST);
         }
         return spending
-    }
+    }*/
 
     @Delete()
     async deleteHistoryWalletByWalletId(@Body() {walletId}: SpendingByWalletIdDto): Promise<{ deletedCount: number; } | null> {

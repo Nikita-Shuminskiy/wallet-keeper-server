@@ -52,7 +52,6 @@ export class SpendingController {
         if (!currentWallet) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
-
         const walletCurrency = currentWallet.currency;
         const walletName = currentWallet.name
 
