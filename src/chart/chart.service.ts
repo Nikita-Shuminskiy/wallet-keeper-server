@@ -31,9 +31,13 @@ export class ChartService {
                 accState[currCategoryKey] = <string>{};
             }
             if (accState[currCategoryKey][currMonth]) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 accState[currCategoryKey][currMonth] =
                     accState[currCategoryKey][currMonth] + Number(currItem.amount);
             } else {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
                 accState[currCategoryKey][currMonth] = Number(currItem.amount);
             }
             return accState;

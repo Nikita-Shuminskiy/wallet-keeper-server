@@ -77,7 +77,7 @@ export class HistoryController {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
         if (queryParams.selectedCategory) {
-            history = history.filter((operation) => operation.category === queryParams.selectedCategory)
+            history = history.filter((operation) => operation.category.toLowerCase() === queryParams.selectedCategory.toLowerCase())
         }
         if (queryParams.sortBy) {
             history = sortWalletHistory(history, queryParams.sortBy, queryParams.sortDecreasing)

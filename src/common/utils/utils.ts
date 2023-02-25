@@ -31,7 +31,7 @@ export const sortWalletHistory = (operations: ReplenishmentModel[], sortField: s
             return isIncreasing ? ret : -ret   // !isIncreasing === убывание
         }
         if (sortField === 'sum') {
-            if (a.amount > b.amount) {
+            if (Number(a.amount) > Number(b.amount)) {
                 return isIncreasing  ? -1 : 1;
             }
             return isIncreasing  ? 1 : -1;

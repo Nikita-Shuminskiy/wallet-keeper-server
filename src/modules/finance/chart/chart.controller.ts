@@ -52,7 +52,7 @@ export class ChartController {
         if (!allHistory) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }
-        const totalSumOperations = allHistory.reduce((acc, curr) => Math.round(acc + curr?.amount), 0)
+        const totalSumOperations = allHistory.reduce((acc, curr) => Math.round(acc + Number(curr?.amount)), 0)
         if (queryParams.isMobile) {
             if (queryParams.typeChart === 'pie') {
                 return {
