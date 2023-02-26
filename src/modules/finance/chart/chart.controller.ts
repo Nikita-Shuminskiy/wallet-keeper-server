@@ -5,8 +5,7 @@ import {getChartDataDto} from "./dto/chart.dto";
 import {AuthGuard} from "../../../common/guards/auth.guard";
 import {User} from "../../../common/decarators/user.decarator";
 import {ReplenishmentService} from "../replenishment/replenishment.service";
-import {checkIsInvalidDate} from "../../../common/utils/utils";
-import moment, * as moments from 'moment';
+import * as moments from 'moment';
 import {WalletService} from "../wallet/wallet.service";
 
 
@@ -23,10 +22,10 @@ export class ChartController {
 
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
-        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).toDate() : null
-        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).toDate() : null
-        dateStart?.setHours(0, 0, 0, 0)
-        dateEnd?.setHours(25, 59, 0, 0)
+        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(false).toDate() : null
+        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(false).toDate() : null
+        dateStart?.setHours(3, 0, 0, 0)
+        dateEnd?.setHours(26, 59, 0, 0)
 
         const paramsForSearchOperations = {
             date: {
@@ -49,6 +48,7 @@ export class ChartController {
         const allHistory = queryParams?.showChart === 'income'
             ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperations)
             : await this.spendingService.getSpendingByParameters(paramsForSearchOperations);
+
         if (!allHistory) {
             throw new HttpException('userId not correct', HttpStatus.BAD_REQUEST);
         }

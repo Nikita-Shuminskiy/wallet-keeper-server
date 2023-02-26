@@ -16,6 +16,8 @@ export class Wallet {
   @IsNotEmpty()
   @Type(() => String)
   currency: string;
+  totalSpends: number
+  totalIncome: number
 }
 
 export class getAllWalletsDto {

@@ -1,3 +1,4 @@
+/*
 import {Controller, Get, HttpException, HttpStatus, Query, UseGuards} from '@nestjs/common';
 import {SpendingService} from "../spending/spending.service";
 import {User} from "../decarators/user.decarator";
@@ -48,3 +49,4 @@ export class ChartController {
     }
 
 }
+*/

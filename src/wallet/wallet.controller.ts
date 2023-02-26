@@ -1,3 +1,4 @@
+/*
 import {Body, Controller, Get, HttpException, HttpStatus, Post, Put, Query, Req, UseGuards,} from '@nestjs/common';
 import { Types } from 'mongoose';
 import {WalletService} from './wallet.service';
@@ -74,3 +75,4 @@ export class WalletController {
         return updateWallet
     }
 }
+*/

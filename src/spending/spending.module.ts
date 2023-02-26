@@ -1,3 +1,4 @@
+/*
 import {Module} from "@nestjs/common";
 import {SpendingController} from "./spending.controller";
 import {MongooseModule} from "@nestjs/mongoose";
@@ -16,3 +17,4 @@ import {SpendingService} from "./spending.service";
 })
 export class SpendingModule {
 }
+*/

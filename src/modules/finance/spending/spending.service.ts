@@ -22,7 +22,7 @@ export class SpendingService {
     async getSpendingByParameters(params): Promise<SpendingModel[] | null> {
         return this.spendingModel.find({
             ...params
-        })
+        }).sort('date')
     }
 
     async addSpending({walletId, userId, spending}: SpendingDtoWithSpendingService): Promise<SpendingModel | null> {

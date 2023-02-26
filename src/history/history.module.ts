@@ -1,3 +1,4 @@
+/*
 import { Module } from '@nestjs/common';
 import { HistoryController } from './history.controller';
 import {WalletService} from "../wallet/wallet.service";
@@ -18,3 +19,4 @@ import {SpendingModel, SpendingModelSchema} from "../spending/spending.model";
   exports: [WalletService, SpendingService],
 })
 export class HistoryModule {}
+*/

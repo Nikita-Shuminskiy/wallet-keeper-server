@@ -46,10 +46,10 @@ export class HistoryController {
 
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') userId: string, @Query() queryParams: getHistoryByParamsDto) {
-        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).toDate() : null
-        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).toDate() : null
-        dateStart?.setHours(0, 0, 0, 0)
-        dateEnd?.setHours(25, 59, 0, 0)
+        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(false).toDate() : null
+        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(false).toDate() : null
+        dateStart?.setHours(3, 0, 0, 0)
+        dateEnd?.setHours(26, 59, 0, 0)
 
         const paramsForSearchOperations = {
             date: {
@@ -68,7 +68,6 @@ export class HistoryController {
         if ((!paramsForSearchOperations.date?.$gte && !paramsForSearchOperations.date?.$lt)) {
             delete paramsForSearchOperations.date
         }
-
         const currentWallet = await this.walletService.getWallet(queryParams.walletId, userId)
         let history = queryParams?.showHistory === 'income'
             ? await this.replenishmentService.getReplenishmentsByParameters(paramsForSearchOperations)
@@ -82,6 +81,7 @@ export class HistoryController {
         if (queryParams.sortBy) {
             history = sortWalletHistory(history, queryParams.sortBy, queryParams.sortDecreasing)
         }
+
         return {
             historyData: history,
             date: {

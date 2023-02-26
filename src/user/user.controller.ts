@@ -1,3 +1,4 @@
+/*
 import { Controller, Get, Headers, UseGuards } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { UserModel } from "./user.model";
@@ -21,3 +22,4 @@ export class UserController {
     }
   }
 }
+*/

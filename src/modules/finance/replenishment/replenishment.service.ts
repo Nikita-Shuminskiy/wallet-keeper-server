@@ -27,7 +27,7 @@ export class ReplenishmentService {
     async getReplenishmentsByParameters(params): Promise<ReplenishmentModel[] | null> {
         return this.replenishmentModel.find({
             ...params
-        })
+        }).sort('date')
 
     }
 

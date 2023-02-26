@@ -1,3 +1,4 @@
+/*
 import {Body, Controller, Delete, Get, HttpException, HttpStatus, Req, Query, UseGuards} from '@nestjs/common';
 import {SpendingModel} from "./spending.model";
 import {SpendingService} from "./spending.service";
@@ -35,3 +36,4 @@ export class SpendingController {
     }
 
 }
+*/
