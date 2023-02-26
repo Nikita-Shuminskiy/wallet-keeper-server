@@ -22,8 +22,8 @@ export class ChartController {
 
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
-        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(false).toDate() : null
-        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(false).toDate() : null
+        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(true).toDate() : null
+        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(true).toDate() : null
         dateStart?.setHours(3, 0, 0, 0)
         dateEnd?.setHours(26, 59, 0, 0)
 
@@ -35,6 +35,7 @@ export class ChartController {
             userId,
             walletId: queryParams.walletId
         }
+        console.log(paramsForSearchOperations)
         if (!paramsForSearchOperations.date?.$gte) {
             delete paramsForSearchOperations.date.$gte
         }

@@ -46,8 +46,8 @@ export class HistoryController {
 
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') userId: string, @Query() queryParams: getHistoryByParamsDto) {
-        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(false).toDate() : null
-        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(false).toDate() : null
+        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(true).toDate() : null
+        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(true).toDate() : null
         dateStart?.setHours(3, 0, 0, 0)
         dateEnd?.setHours(26, 59, 0, 0)
 
