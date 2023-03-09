@@ -22,7 +22,7 @@ export class CategorySpendService {
         return await this.categorySpendModel.create({...category, userId})
     }
 
-    async getCategories(userId: string): Promise<CategoryIncomeModel[] | null> {
-        return this.categorySpendModel.find({userId: userId});
+    async getCategories(params): Promise<CategoryIncomeModel[] | null> {
+        return this.categorySpendModel.find({...params});
     }
 }

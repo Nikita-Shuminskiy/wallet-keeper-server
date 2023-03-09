@@ -20,6 +20,10 @@ export class CategorySpendModel extends Document {
         required: true,
     })
     color: string
+    @Prop({
+        required: true,
+    })
+    operation: 'spend' | 'income'
 
 }
 

@@ -38,7 +38,7 @@ export class CategoryIncomeController {
 
     @Get()
     async getCategoriesIncome(@User('_id') userId: string): Promise<CategoryIncomeModel[] | null> {
-        const category = await this.categoryIncomeService.getCategories(userId)
+        const category = await this.categoryIncomeService.getCategories({userId, operation: 'income'})
         if (!category) {
             throw new HttpException('Ошибка, попробуйте позже', HttpStatus.BAD_REQUEST);
         }

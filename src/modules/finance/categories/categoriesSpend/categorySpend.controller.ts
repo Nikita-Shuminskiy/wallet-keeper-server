@@ -33,7 +33,7 @@ export class CategorySpendController {
 
     @Get()
     async getCategoriesISpend(@User('_id') userId: string): Promise<CategorySpendModel[] | null> {
-        const category = await this.categorySpendService.getCategories(userId)
+        const category = await this.categorySpendService.getCategories({userId, operation: 'spend'})
         if (!category) {
             throw new HttpException('Ошибка, попробуйте позже', HttpStatus.BAD_REQUEST);
         }
