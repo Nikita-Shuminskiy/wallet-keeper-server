@@ -15,7 +15,7 @@ export class CategorySpendService {
     }
 
     async findCategorySpends(nameCategory: string, userId: string): Promise<ICategory | null> {
-        return this.categorySpendModel.findOne({value: nameCategory, userId});
+        return this.categorySpendModel.findOne({value: nameCategory, userId, operation: 'spend'});
     }
 
     async addCategory({userId, category}: CategorySpendDtoService): Promise<CategorySpendModel | null> {

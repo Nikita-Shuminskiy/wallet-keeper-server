@@ -16,7 +16,7 @@ export class CategoryIncomeService {
     ) {
     }
     async findCategoryIncome(nameCategory: string, userId: string): Promise<ICategory | null> {
-        return this.categoryModel.findOne({value: nameCategory, userId});
+        return this.categoryModel.findOne({value: nameCategory, userId, operation: 'income'});
     }
     async addCategory({userId, category}: CategoryIncomeDtoService): Promise<CategoryIncomeModel | null> {
         return await this.categoryModel.create({...category, userId})
