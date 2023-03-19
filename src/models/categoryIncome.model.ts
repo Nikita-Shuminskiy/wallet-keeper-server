@@ -17,10 +17,6 @@ export class CategoryIncomeModel extends Document {
     })
     color: string
 
-    @Prop({
-        required: true,
-    })
-    operation: 'spend' | 'income'
 }
 
 
