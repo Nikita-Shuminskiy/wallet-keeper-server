@@ -16,7 +16,7 @@ import { AuthModel } from "./models/auth.model";
 import { JWTService } from "./services/jwt.service";
 
 import { RefreshDto } from "./dto/refresh.dto";
-import {UserModel} from "../models/user.model";
+import {UserModel} from "../../models/user.model";
 
 @ApiTags("Authorization")
 @Controller("auth")

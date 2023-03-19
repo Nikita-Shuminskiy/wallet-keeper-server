@@ -4,10 +4,9 @@ import {ReplenishmentModel} from "../../../models/replenishment.model";
 import {User} from "../../../common/decarators/user.decarator";
 import {AddReplenishmentDto, DeleteReplenishmentDto, GetReplenishmentDto} from "./dto/replenishment.dto";
 import {WalletService} from "../wallet/wallet.service";
-import {AuthGuard} from "../../../common/guards/auth.guard";
-import {ICategory} from "../../../models/wallet.model";
-import {UserPassService} from "../../../authentication/services/user-pass.service";
+
 import moment, * as moments from 'moment';
+import {AuthGuard} from "../../authentication/guards/auth.guard";
 
 @Controller('replenishment')
 @UseGuards(AuthGuard)

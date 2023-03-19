@@ -2,11 +2,11 @@ import {Controller, Get, HttpException, HttpStatus, Query, UseGuards} from '@nes
 import {SpendingService} from "../spending/spending.service";
 import {ChartService} from "./chart.service";
 import {getChartDataDto} from "./dto/chart.dto";
-import {AuthGuard} from "../../../common/guards/auth.guard";
 import {User} from "../../../common/decarators/user.decarator";
 import {ReplenishmentService} from "../replenishment/replenishment.service";
 import * as moments from 'moment';
 import {WalletService} from "../wallet/wallet.service";
+import {AuthGuard} from "../../authentication/guards/auth.guard";
 
 
 @Controller('chart')

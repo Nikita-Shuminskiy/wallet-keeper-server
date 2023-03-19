@@ -6,7 +6,7 @@ import {CreateAuthDto, CreateAuthDtoGoogle} from "../dto/create-auth.dto";
 import {AuthModelService} from "./auth-model.service";
 import {AuthTokenModel} from "../models/auth-token.model";
 import {JWTService} from "./jwt.service";
-import {UsersService} from "../../modules/user/users.service";
+import {UsersService} from "../../user/users.service";
 
 
 export interface JwtPayload {

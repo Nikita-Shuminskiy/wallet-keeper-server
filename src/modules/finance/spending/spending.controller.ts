@@ -15,9 +15,9 @@ import {AddSpendingDto, SpendingDtoService, SpendingWalletIdDto} from "./dto/spe
 import {SpendingModel} from "../../../models/spending.model";
 import {User} from "../../../common/decarators/user.decarator";
 import {UpdateSpendingDto} from "../history/dto/history.dto";
-import {AuthGuard} from "../../../common/guards/auth.guard";
 import {WalletService} from "../wallet/wallet.service";
 import moment, * as moments from 'moment';
+import {AuthGuard} from "../../authentication/guards/auth.guard";
 
 
 @Controller('spending')

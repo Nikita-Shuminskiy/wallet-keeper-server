@@ -1,10 +1,10 @@
 import {Body, Controller, Get, HttpException, HttpStatus, Post, UseGuards} from '@nestjs/common';
 import {User} from "../../../../common/decarators/user.decarator";
-import {AuthGuard} from "../../../../common/guards/auth.guard";
 import {CategorySpendService} from "./categorySpend.service";
 import {ICategory} from "../../../../models/wallet.model";
 import {CategorySpendModel} from "../../../../models/categorySpend.model";
 import {AddCategorySpendDto} from "./dto/categoryIncome.dto";
+import {AuthGuard} from "../../../authentication/guards/auth.guard";
 
 
 @Controller('categories-spend')

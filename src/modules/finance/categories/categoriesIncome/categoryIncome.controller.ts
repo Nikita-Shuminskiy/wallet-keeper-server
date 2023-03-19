@@ -4,12 +4,12 @@ import {SpendingService} from "../../spending/spending.service";
 import {SpendingModel} from "../../../../models/spending.model";
 import {User} from "../../../../common/decarators/user.decarator";
 import {UserId, WalletId} from "../../../../common/dto/common.dto";
-import {AuthGuard} from "../../../../common/guards/auth.guard";
 import {ReplenishmentService} from "../../replenishment/replenishment.service";
 import {AddCategoryIncomeDto} from "./dto/categoryIncome.dto";
 import {CategoryIncomeService} from "./categoryIncome.service";
 import {CategoryIncomeModel} from "../../../../models/categoryIncome.model";
 import {ICategory} from "../../../../models/wallet.model";
+import {AuthGuard} from "../../../authentication/guards/auth.guard";
 
 
 @Controller('categories-income')

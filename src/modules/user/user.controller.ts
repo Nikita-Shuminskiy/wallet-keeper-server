@@ -1,11 +1,11 @@
 import {Body, Controller, Get, Headers, HttpException, HttpStatus, Post, Put, UseGuards} from "@nestjs/common";
 import {UsersService} from "./users.service";
 import {UserModel} from "../../models/user.model";
-import {JwtPayload} from "../../authentication/services/auth.service";
-import {JWTService} from "../../authentication/services/jwt.service";
-import {AuthGuard} from "../../common/guards/auth.guard";
 import {User} from "../../common/decarators/user.decarator";
 import {setFirstEnterDto} from "./dto/user.dto";
+import {JWTService} from "../authentication/services/jwt.service";
+import {AuthGuard} from "../authentication/guards/auth.guard";
+import {JwtPayload} from "../authentication/services/auth.service";
 
 
 @Controller("user")

@@ -5,7 +5,7 @@ import {addWalletDto, deleteWalletDto, getWalletDto, updateWalletDto} from './dt
 import {WalletModel} from "../../../models/wallet.model";
 import {User} from "../../../common/decarators/user.decarator";
 import {SpendingService} from "../spending/spending.service";
-import {AuthGuard} from "../../../common/guards/auth.guard";
+import {AuthGuard} from "../../authentication/guards/auth.guard";
 
 
 
