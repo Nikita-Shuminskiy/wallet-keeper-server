@@ -15,14 +15,14 @@ export class CategorySpendService {
     }
 
     async findCategorySpends(nameCategory: string, userId: string): Promise<ICategory | null> {
-        return this.categorySpendModel.findOne({value: nameCategory, userId, operation: 'spend'});
+        return this.categorySpendModel.findOne({value: nameCategory, userId});
     }
 
     async addCategory({userId, category}: CategorySpendDtoService): Promise<CategorySpendModel | null> {
         return await this.categorySpendModel.create({...category, userId})
     }
 
-    async getCategories(params): Promise<CategoryIncomeModel[] | null> {
-        return this.categorySpendModel.find({...params});
+    async getCategories(userId: string): Promise<CategoryIncomeModel[] | null> {
+        return this.categorySpendModel.find({userId: userId});
     }
 }

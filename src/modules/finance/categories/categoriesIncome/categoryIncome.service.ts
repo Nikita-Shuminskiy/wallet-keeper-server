@@ -16,13 +16,13 @@ export class CategoryIncomeService {
     ) {
     }
     async findCategoryIncome(nameCategory: string, userId: string): Promise<ICategory | null> {
-        return this.categoryModel.findOne({value: nameCategory, userId, operation: 'income'});
+        return this.categoryModel.findOne({value: nameCategory, userId});
     }
     async addCategory({userId, category}: CategoryIncomeDtoService): Promise<CategoryIncomeModel | null> {
         return await this.categoryModel.create({...category, userId})
     }
 
-    async getCategories(params): Promise<CategoryIncomeModel[] | null> {
-        return this.categoryModel.find({...params});
+    async getCategories(userId: string): Promise<CategoryIncomeModel[] | null> {
+        return this.categoryModel.find({userId: userId});
     }
 }
