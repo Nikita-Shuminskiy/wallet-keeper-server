@@ -43,7 +43,17 @@ export class HistoryController {
         }
         return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1).slice(0, 5)
     }
-
+    @Get("last-five-replenishment")
+    async getLastFiveReplenishmentHistory(@Query() {
+        walletId
+    }: any, @User('_id') userId: string): Promise<SpendingModel[] | null> {
+        const dto = {walletId, userId}
+        const spending = await this.replenishmentService.getReplenishmentsByParameters(dto)
+        if (!spending) {
+            throw new HttpException('Дохода не найдено', HttpStatus.BAD_REQUEST);
+        }
+        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1).slice(0, 5)
+    }
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') userId: string, @Query() queryParams: getHistoryByParamsDto) {
         const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(true).toDate() : null

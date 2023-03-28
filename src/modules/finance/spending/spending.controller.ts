@@ -55,6 +55,8 @@ export class SpendingController {
         const walletCurrency = currentWallet.currency;
         const walletName = currentWallet.name
 
+
+
         const spending = await this.spendingService.addSpending({
             userId,
             walletId,

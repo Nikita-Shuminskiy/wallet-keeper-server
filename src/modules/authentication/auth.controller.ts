@@ -1,29 +1,23 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Headers,
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Post
-} from "@nestjs/common";
-import { RequestUserDto } from "./dto/request-auth.dto";
-import { AuthService } from "./services/auth.service";
+import {Body, Controller, Headers, HttpCode, HttpException, Post} from "@nestjs/common";
+import {RequestUserDto} from "./dto/request-auth.dto";
+import {AuthService} from "./services/auth.service";
 import {CreateAuthDto, CreateAuthDtoGoogle} from "./dto/create-auth.dto";
-import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { AuthModel } from "./models/auth.model";
-import { JWTService } from "./services/jwt.service";
+import {ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
+import {AuthModel} from "./models/auth.model";
+import {JWTService} from "./services/jwt.service";
 
-import { RefreshDto } from "./dto/refresh.dto";
+import {RefreshDto} from "./dto/refresh.dto";
 import {UserModel} from "../../models/user.model";
 
 @ApiTags("Authorization")
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService,
-              private jwtService: JWTService) {
+              private jwtService: JWTService,
+  ) {
   }
+
+
 
   @ApiOperation({ summary: "New user register" })
   @ApiResponse({ status: 201, type: AuthModel })
