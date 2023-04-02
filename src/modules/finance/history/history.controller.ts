@@ -42,7 +42,7 @@ export class HistoryController {
         if (!spending) {
             throw new HttpException('Трат не найдено', HttpStatus.BAD_REQUEST);
         }
-        return spending.sort((a, b) => moments(a.date).toDate() > moments(b.date).toDate() ? -1 : 1).slice(0, 5)
+        return spending.sort((a, b) => a.date > b.date ? -1 : 1).slice(0, 5)
     }
 
     @Get("last-five-replenishment")
@@ -54,7 +54,7 @@ export class HistoryController {
         if (!replenishment) {
             throw new HttpException('Дохода не найдено', HttpStatus.BAD_REQUEST);
         }
-        return replenishment.sort((a, b) => moments(a.date).toDate() > moments(b.date).toDate() ? -1 : 1).slice(0, 5)
+        return replenishment.sort((a, b) => a.date > b.date ? -1 : 1).slice(0, 5)
     }
 
     @Get('allUserHistory')

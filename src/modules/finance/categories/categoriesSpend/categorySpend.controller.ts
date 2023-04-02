@@ -20,7 +20,6 @@ export class CategorySpendController {
     @Post()
     async addCategorySpend(@Body() {categorySpend}: AddCategorySpendDto, @User('_id') userId: string): Promise<ICategory | null> {
         const checkCategory = await this.categorySpendService.findCategorySpends(categorySpend.value, userId)
-        console.log(checkCategory)
         if (checkCategory) {
             throw new HttpException('Категория уже существует', HttpStatus.BAD_REQUEST);
         }

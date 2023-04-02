@@ -37,7 +37,6 @@ export class ReplenishmentController {
         if (!currentWallet) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
-
         const walletCurrency = currentWallet.currency;
         const walletName = currentWallet.name
         const currentReplenishment = await this.replenishmentService.addReplenishment({
