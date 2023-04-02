@@ -9,8 +9,8 @@ export class SpendingByUserIdDto {
     userId : string;
 }
 export class getHistoryByParamsDto {
-    dateStart?: number;
-    dateEnd?: number;
+    dateStart?: string;
+    dateEnd?: string;
     selectedCategory: string
     showHistory: 'income' | 'spend';
     sortBy: 'date' | 'sum' | 'categoryName'

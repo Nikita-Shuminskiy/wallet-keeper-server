@@ -1,5 +1,8 @@
 import {SpendingModel} from "../models/spending.model";
-
+import * as moments from "moment/moment";
+export const convertToDate = (date: string, hour: number) => {
+    return moments(date, "DD/MM/YYYY").set({hour: hour}).utc(true).toDate()
+}
 
 const transformToChartDataHandlerForChartPie = (spendingArray: SpendingModel[]) => {
     return spendingArray.reduce((accState: { [key: string]: string }, currItem) => {

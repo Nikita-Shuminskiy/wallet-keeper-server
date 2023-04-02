@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, HttpException, HttpStatus, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Logger, Query, UseGuards} from '@nestjs/common';
 import {WalletService} from "../wallet/wallet.service";
 import {SpendingService} from "../spending/spending.service";
 import {SpendingModel} from "../../../models/spending.model";
@@ -9,6 +9,7 @@ import {sortWalletHistory} from "../../../common/utils/utils";
 import {ReplenishmentService} from "../replenishment/replenishment.service";
 import {getHistoryByParamsDto} from "./dto/history.dto";
 import {AuthGuard} from "../../authentication/guards/auth.guard";
+import {convertToDate} from "../../../utils/utils";
 
 
 @Controller('history')
@@ -41,25 +42,27 @@ export class HistoryController {
         if (!spending) {
             throw new HttpException('Трат не найдено', HttpStatus.BAD_REQUEST);
         }
-        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1).slice(0, 5)
+        return spending.sort((a, b) => moments(a.date).toDate() > moments(b.date).toDate() ? -1 : 1).slice(0, 5)
     }
+
     @Get("last-five-replenishment")
     async getLastFiveReplenishmentHistory(@Query() {
         walletId
     }: any, @User('_id') userId: string): Promise<SpendingModel[] | null> {
         const dto = {walletId, userId}
-        const spending = await this.replenishmentService.getReplenishmentsByParameters(dto)
-        if (!spending) {
+        const replenishment = await this.replenishmentService.getReplenishmentsByParameters(dto)
+        if (!replenishment) {
             throw new HttpException('Дохода не найдено', HttpStatus.BAD_REQUEST);
         }
-        return spending.sort((a, b) => a.createdAt > b.createdAt ? -1 : 1).slice(0, 5)
+        return replenishment.sort((a, b) => moments(a.date).toDate() > moments(b.date).toDate() ? -1 : 1).slice(0, 5)
     }
+
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') userId: string, @Query() queryParams: getHistoryByParamsDto) {
-        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(true).toDate() : null
-        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(true).toDate() : null
-        dateStart?.setHours(3, 0, 0, 0)
-        dateEnd?.setHours(26, 59, 0, 0)
+
+
+        const dateStart = queryParams?.dateStart ? convertToDate(queryParams?.dateStart, 0) : null
+        const dateEnd = queryParams?.dateEnd ? convertToDate(queryParams?.dateEnd, 11) : null
 
         const paramsForSearchOperations = {
             date: {

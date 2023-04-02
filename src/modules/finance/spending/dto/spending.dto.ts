@@ -75,6 +75,6 @@ export class AddSpendingDto {
         amount: number;
         walletName: string;
         currency: string;
-        date: number
+        date: string
     };
 }

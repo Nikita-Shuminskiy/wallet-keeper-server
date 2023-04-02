@@ -60,7 +60,7 @@ export class AddReplenishmentDto {
         amount: number;
         walletName: string;
         currency: string;
-        date: number
+        date: string
     };
 }
 
