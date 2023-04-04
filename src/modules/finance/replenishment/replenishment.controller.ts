@@ -7,6 +7,7 @@ import {WalletService} from "../wallet/wallet.service";
 
 import moment, * as moments from 'moment';
 import {AuthGuard} from "../../authentication/guards/auth.guard";
+import {convertToDate} from "../../../utils/utils";
 
 @Controller('replenishment')
 @UseGuards(AuthGuard)
@@ -36,7 +37,6 @@ export class ReplenishmentController {
         if (!currentWallet) {
             throw new HttpException('walletId not correct', HttpStatus.BAD_REQUEST);
         }
-
         const walletCurrency = currentWallet.currency;
         const walletName = currentWallet.name
         const currentReplenishment = await this.replenishmentService.addReplenishment({
@@ -44,7 +44,7 @@ export class ReplenishmentController {
             walletId,
             replenishment: {
                 ...replenishment,
-                date: moments.unix(replenishment.date).toDate(),
+                date: convertToDate(replenishment.date, 4),
                 currency: walletCurrency,
                 walletName: walletName,
                 title: 'income'
@@ -78,7 +78,7 @@ export class ReplenishmentController {
         })
         const updateReplenishment = await this.replenishmentService.updateReplenishment({
             ...dto, replenishment: {
-                ...dto.replenishment, date: moments.unix(replenishment.date).toDate()
+                ...dto.replenishment, date: convertToDate(replenishment.date, 4)
             }
         })
         if (!updateReplenishment) {

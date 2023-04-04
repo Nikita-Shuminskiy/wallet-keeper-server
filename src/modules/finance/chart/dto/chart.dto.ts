@@ -3,8 +3,8 @@ import {toMongoObjectId} from "../../../../common/helpers/handlers/userIdHandler
 
 
 export class getChartDataDto {
-    dateStart?: number;
-    dateEnd?: number;
+    dateStart?: string;
+    dateEnd?: string;
     showChart: 'income' | 'spend';
     isMobile?: boolean
     typeChart?: 'line' | 'pie'

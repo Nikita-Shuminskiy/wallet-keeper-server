@@ -7,6 +7,7 @@ import {ReplenishmentService} from "../replenishment/replenishment.service";
 import * as moments from 'moment';
 import {WalletService} from "../wallet/wallet.service";
 import {AuthGuard} from "../../authentication/guards/auth.guard";
+import {convertToDate} from "../../../utils/utils";
 
 
 @Controller('chart')
@@ -22,10 +23,9 @@ export class ChartController {
 
     @Get('/getChartData')
     async getChartData(@User('_id') userId: string, @Query() queryParams: getChartDataDto) {
-        const dateStart = queryParams?.dateStart ? moments.unix(queryParams?.dateStart).utc(true).toDate() : null
-        const dateEnd = queryParams?.dateEnd ? moments.unix(queryParams?.dateEnd).utc(true).toDate() : null
-        dateStart?.setHours(3, 0, 0, 0)
-        dateEnd?.setHours(26, 59, 0, 0)
+
+        const dateStart = queryParams?.dateStart ? convertToDate(queryParams?.dateStart, 0) : null
+        const dateEnd = queryParams?.dateEnd ? convertToDate(queryParams?.dateEnd, 11) : null
 
         const paramsForSearchOperations = {
             date: {
@@ -35,7 +35,6 @@ export class ChartController {
             userId,
             walletId: queryParams.walletId
         }
-        console.log(paramsForSearchOperations)
         if (!paramsForSearchOperations.date?.$gte) {
             delete paramsForSearchOperations.date.$gte
         }

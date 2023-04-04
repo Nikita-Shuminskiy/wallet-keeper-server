@@ -13,14 +13,14 @@ export class JWTService {
   generateShortToken(email: string, _id: string) {
     return this.jwtService.sign({ email, _id }, {
       secret: jwtConstants.secret,
-      expiresIn: "2h"
+      expiresIn: "365d"
     });
   }
 
   generateLongToken(email: string, _id: string) {
     return this.jwtService.sign({ email, _id }, {
       secret: jwtConstants.secret,
-      expiresIn: "24h"
+      expiresIn: "365d"
     });
   }
 
@@ -36,7 +36,7 @@ export class JWTService {
   }
 
   decodeToken<T>(jwt: string): T {
-    const [, token] = jwt.split(" ");
+    const [, token] = jwt?.split(" ");
     const payload = this.jwtService.decode(token) as T;
     return payload;
   }

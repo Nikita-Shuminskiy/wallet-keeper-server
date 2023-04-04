@@ -74,8 +74,7 @@ export class AuthService {
         }
         const {_id, email} = await this.usersService.getUser(dto.email);
         const token = this.jwtService.generateShortToken(email, _id);
-        const tokenInstance = await this.authModelService.updateToken({_id, token});
-        return tokenInstance;
+        return await this.authModelService.updateToken({_id, token});
     }
 
     async refreshToken(jwt: string) {

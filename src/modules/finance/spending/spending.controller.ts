@@ -18,6 +18,7 @@ import {UpdateSpendingDto} from "../history/dto/history.dto";
 import {WalletService} from "../wallet/wallet.service";
 import moment, * as moments from 'moment';
 import {AuthGuard} from "../../authentication/guards/auth.guard";
+import {convertToDate} from "../../../utils/utils";
 
 
 @Controller('spending')
@@ -62,7 +63,7 @@ export class SpendingController {
             walletId,
             spending: {
                 ...spendingDto,
-                date: moments.unix(spendingDto.date).toDate(),
+                date: convertToDate(spendingDto.date, 4),
                 currency: walletCurrency,
                 walletName: walletName,
                 title: 'spend'
