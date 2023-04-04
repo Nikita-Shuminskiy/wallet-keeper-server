@@ -5,22 +5,31 @@ import {User} from "../../common/decarators/user.decarator";
 import {setFirstEnterDto} from "./dto/user.dto";
 import {JWTService} from "../authentication/services/jwt.service";
 import {AuthGuard} from "../authentication/guards/auth.guard";
-import {JwtPayload} from "../authentication/services/auth.service";
+import {AuthService, JwtPayload} from "../authentication/services/auth.service";
 import {UserPassService} from "../authentication/services/user-pass.service";
+import {AuthModelService} from "../authentication/services/auth-model.service";
 
 @Controller("user")
 export class UserController {
   constructor(private usersService: UsersService,
               private jwtService: JWTService,
-              private userPassService: UserPassService
+              private userPassService: UserPassService,
+              private authModelService: AuthModelService,
+              private authService: AuthService,
 
   ) {
   }
   @Post("update-pass")
-  async updatePassword(@Body() dto: {newPassword: string, _id: string}) {
+  async updatePassword(@Body() dto: {newPassword: string, userId: string, email: string}) {
     const passwordHash = await this.usersService.hashPassword(dto.newPassword);
-    const newToken = await this.userPassService.update({passwordHash, _id: dto._id});
-    return { token: newToken };
+
+    await this.userPassService.update({passwordHash, _id: dto.userId});
+
+    const user = await this.authService.login({password: dto.newPassword, email: dto.email});
+
+    return {
+      token: user.token
+    };
   }
   @UseGuards(AuthGuard)
   @Get()

@@ -102,7 +102,7 @@ export class HistoryController {
                 dateEnd: dateEnd ? dateEnd : null
             },
             showChart: queryParams?.showHistory,
-            walletName: currentWallet.name
+            walletName: currentWallet?.name
         }
     }
 
