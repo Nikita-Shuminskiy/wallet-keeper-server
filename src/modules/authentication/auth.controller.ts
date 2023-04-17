@@ -19,18 +19,18 @@ export class AuthController {
 
 
 
-  @ApiOperation({ summary: "New user register" })
-  @ApiResponse({ status: 201, type: AuthModel })
+/*  @ApiOperation({ summary: "New user register" })
+  @ApiResponse({ status: 201, type: AuthModel })*/
   @HttpCode(201)
   @Post("register")
   async registration(@Body() dto: CreateAuthDto) {
+
     const newUser = await this.authService.register(dto);
     if (!newUser) {
       throw new HttpException("Непредвиденная ошибка, попробуйте позже", 401);
     }
     return newUser;
   }
-  @ApiOperation({ summary: "User login witch google" })
   @ApiResponse({ status: 201, type: UserModel })
   @HttpCode(201)
   @Post("login")

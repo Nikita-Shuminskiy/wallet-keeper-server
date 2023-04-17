@@ -4,7 +4,6 @@ import { mailExample, passExample } from "../constants";
 
 export class RequestUserDto {
   @ApiProperty(mailExample)
-  @IsEmail()
   @IsNotEmpty()
   email: string;
 

@@ -26,10 +26,12 @@ export class AuthService {
     }
 
     async register(dto: CreateAuthDto): Promise<AuthModel> {
+
         const existingUser = await this.usersService.getUser(dto.email);
         if (existingUser) {
             throw new HttpException("Пользователь уже существует", HttpStatus.CONFLICT);
         }
+
         await this.usersService.createUser(dto);
         const newUser = await this.usersService.getUser(dto.email);
         const token = this.jwtService.generateShortToken(newUser._id, newUser.email);
@@ -69,6 +71,7 @@ export class AuthService {
 
     async login(dto: RequestUserDto): Promise<AuthTokenModel | null> {
         const isUserValid = await this.validateUser(dto);
+        console.log(isUserValid)
         if (!isUserValid) {
             throw new HttpException('Неправильный логин или пороль', HttpStatus.CONFLICT);
         }
@@ -85,9 +88,11 @@ export class AuthService {
 
     async validateUser({email, password}: RequestUserDto): Promise<boolean> {
         const user = await this.usersService.getUser(email);
-        const pass = await this.usersService.getPassModelById(user._id);
-        const isEqual = await bcrypt.compare(password, pass.passwordHash);
-        return isEqual;
+        const pass = await this.usersService.getPassModelById(user?._id);
+        if (!user?._id) {
+            return false
+        }
+        return await bcrypt.compare(password, pass?.passwordHash);
     }
 
     async logout(_id: string) {
