@@ -9,6 +9,6 @@ export const jwtExample = {example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
 
 export const idExample = {example: '14246a564e1d6519db5a7e365', description: 'Unique id'}
 
-export const mailExample = {example: 'example_212@ex.com', description: 'User email'}
+export const mailExample = {example: 'example_212', description: 'User email'}
 
 export const passExample = {example: 'nQ@NNQ#3f3w7', description: 'Any pass (no validation)'}
