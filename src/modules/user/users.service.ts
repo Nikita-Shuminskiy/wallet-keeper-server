@@ -15,9 +15,9 @@ export class UsersService {
   ) {
   }
 
-  async createUser({ password, email, lastName, firstName }: CreateAuthDto): Promise<UserModel> {
+  async createUser({ password, email, name}: CreateAuthDto): Promise<UserModel> {
     const passwordHash = await this.hashPassword(password);
-    const newUser = new this.userModel({ email, firstName, lastName });
+    const newUser = new this.userModel({ email, name });
     await this.userPassService.create({ _id: newUser._id, passwordHash });
     return newUser.save();
   }

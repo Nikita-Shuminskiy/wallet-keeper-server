@@ -8,23 +8,43 @@ import {JWTService} from "./services/jwt.service";
 
 import {RefreshDto} from "./dto/refresh.dto";
 import {UserModel} from "../../models/user.model";
+import {UsersService} from "../user/users.service";
+import {UserPassService} from "./services/user-pass.service";
 
 @ApiTags("Authorization")
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService,
               private jwtService: JWTService,
+              private usersService: UsersService,
+              private userPassService: UserPassService,
   ) {
   }
+  @HttpCode(201)
+  @Post("forgot-pass")
+  async changePassword(@Body() dto: {email:string, name: string, newPassword: string}) {
+    const user = await this.usersService.getUser(dto.email);
+    if (!user) {
+      throw new HttpException("Неверный адрес электронной почты", 401);
+    }
 
+    if(user.name !== dto.name) {
+      throw new HttpException("Неверное имя пользователя", 401);
+    }
+    const passwordHash = await this.usersService.hashPassword(dto.newPassword);
 
+    await this.userPassService.update({passwordHash, _id: user._id});
 
-/*  @ApiOperation({ summary: "New user register" })
-  @ApiResponse({ status: 201, type: AuthModel })*/
+    const updatedUser = await this.authService.login({password: dto.newPassword, email: dto.email});
+
+    return {
+      token: updatedUser.token
+    };
+  }
+
   @HttpCode(201)
   @Post("register")
   async registration(@Body() dto: CreateAuthDto) {
-
     const newUser = await this.authService.register(dto);
     if (!newUser) {
       throw new HttpException("Непредвиденная ошибка, попробуйте позже", 401);
@@ -40,7 +60,7 @@ export class AuthController {
     }
     const user = await this.authService.login(dto);
     if (!user) {
-      throw new HttpException("Неправильный адрес электронной почты или пароль", 401);
+      throw new HttpException("Неправильный логин или пароль", 401);
     }
     return user;
   }

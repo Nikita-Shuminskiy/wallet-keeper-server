@@ -7,10 +7,7 @@ export type UserModelType = UserModel & Document;
 export class UserModel extends Document {
 
   @Prop({ nullable: true, default: null })
-  firstName: string;
-
-  @Prop({ nullable: true, default: null })
-  lastName: string;
+  name: string;
 
   @Prop({ nullable: true, default: null })
   avatarImg: string;
