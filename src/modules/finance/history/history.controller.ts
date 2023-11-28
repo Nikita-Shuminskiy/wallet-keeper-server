@@ -59,11 +59,8 @@ export class HistoryController {
 
     @Get('allUserHistory')
     async getHistoryWalletByUserId(@User('_id') userId: string, @Query() queryParams: getHistoryByParamsDto) {
-
-
         const dateStart = queryParams?.dateStart ? convertToDate(queryParams?.dateStart, 0) : null
         const dateEnd = queryParams?.dateEnd ? convertToDate(queryParams?.dateEnd, 11) : null
-
         const paramsForSearchOperations = {
             date: {
                 $gte: dateStart,

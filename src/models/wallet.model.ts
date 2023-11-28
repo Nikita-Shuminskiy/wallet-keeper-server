@@ -59,6 +59,11 @@ export class WalletModel extends Document{
   totalIncome: number;
 }
 
-
+@Schema({ timestamps: true, validateBeforeSave: true })
+export class SettingsModel extends Document {
+  @Prop()
+  appVersion: string;
+}
 
 export const WalletModelSchema = SchemaFactory.createForClass(WalletModel)
+export const SettingsModelSchema = SchemaFactory.createForClass(SettingsModel)

@@ -9,7 +9,7 @@ import {HistoryController} from "./history/history.controller";
 import {WalletService} from "./wallet/wallet.service";
 import {ChartService} from "./chart/chart.service";
 import {SpendingModel, SpendingModelSchema} from "../../models/spending.model";
-import {WalletModel, WalletModelSchema} from "../../models/wallet.model";
+import {SettingsModel, SettingsModelSchema, WalletModel, WalletModelSchema} from "../../models/wallet.model";
 import {ReplenishmentModel, ReplenishmentModelSchema} from "../../models/replenishment.model";
 import {SpendingController} from "./spending/spending.controller";
 import {ReplenishmentController} from "./replenishment/replenishment.controller";
@@ -19,12 +19,15 @@ import {CategoryIncomeModel, CategorySpendSchema} from "../../models/categoryInc
 import {CategorySpendController} from "./categories/categoriesSpend/categorySpend.controller";
 import {CategorySpendService} from "./categories/categoriesSpend/categorySpend.service";
 import {CategoryModelSchema, CategorySpendModel} from "../../models/categorySpend.model";
+import {SettingsController} from "../Settings/settings.controller";
+import {SettingsService} from "../Settings/settings.service";
 
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             {name: WalletModel.name, schema: WalletModelSchema},
+            {name: SettingsModel.name, schema: SettingsModelSchema},
             {name: SpendingModel.name, schema: SpendingModelSchema},
             {name: ReplenishmentModel.name, schema: ReplenishmentModelSchema},
             {name: CategoryIncomeModel.name, schema: CategoryModelSchema},
@@ -38,7 +41,8 @@ import {CategoryModelSchema, CategorySpendModel} from "../../models/categorySpen
         HistoryController,
         ChartController,
         CategoryIncomeController,
-        CategorySpendController
+        CategorySpendController,
+        SettingsController
     ],
     providers: [
         WalletService,
@@ -46,7 +50,8 @@ import {CategoryModelSchema, CategorySpendModel} from "../../models/categorySpen
         ReplenishmentService,
         ChartService,
         CategoryIncomeService,
-        CategorySpendService
+        CategorySpendService,
+        SettingsService
     ],
     exports: [],
 })
